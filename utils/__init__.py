@@ -14,6 +14,7 @@ from .database import (
     CallSession,
     DueItem,
     GamePreference,
+    AFKStatus,
 )
 
 __all__ = [
@@ -26,4 +27,5 @@ __all__ = [
     "CallSession",
     "DueItem",
     "GamePreference",
+    "AFKStatus",
 ]

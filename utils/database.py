@@ -114,8 +114,20 @@ class GamePreference(BaseModel):
         )
 
 
+class AFKStatus(BaseModel):
+    """AFK status tracking for users."""
+    
+    user = ForeignKeyField(User, backref="afk_status", on_delete="CASCADE", unique=True)
+    reason = CharField(max_length=500, null=True, help_text="Reason for being AFK")
+    expected_back = DateTimeField(null=True, help_text="Expected return time (UTC)")
+    set_at = DateTimeField(default=datetime.utcnow, help_text="When AFK was set")
+    
+    class Meta:
+        table_name = "afk_status"
+
+
 # List of all models for easy reference
-MODELS = [User, Finance, CallSession, DueItem, GamePreference]
+MODELS = [User, Finance, CallSession, DueItem, GamePreference, AFKStatus]
 
 
 def initialize_database():
