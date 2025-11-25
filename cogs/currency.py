@@ -199,23 +199,29 @@ class CurrencyConverter(BaseCog):
             rates
         )
         
-        # Currency symbols
+        # Currency symbols and emojis
         symbols = {
             "USD": "$",
             "CNY": "¥",
             "ZAR": "R"
         }
         
+        currency_emojis = {
+            "USD": "🇺🇸",
+            "CNY": "🇨🇳",
+            "ZAR": "🇿🇦"
+        }
+        
         # Create embed response
         embed = create_embed(
             title="💱 Currency Conversion",
-            color=discord.Color.blue(),
+            color=discord.Color.blurple(),
             fields=[
-                ("From", f"{symbols[from_currency]}{amount_decimal:,.2f} {from_currency}", True),
-                ("To", f"{symbols[to_currency]}{converted_amount:,.2f} {to_currency}", True),
-                ("Rate", f"1 {from_currency} = {rates[to_currency]/rates[from_currency]:.4f} {to_currency}", False)
+                (f"📤 From", f"{currency_emojis[from_currency]} {symbols[from_currency]}{amount_decimal:,.2f} **{from_currency}**", True),
+                (f"📥 To", f"{currency_emojis[to_currency]} {symbols[to_currency]}{converted_amount:,.2f} **{to_currency}**", True),
+                (f"📊 Exchange Rate", f"1 {from_currency} = **{rates[to_currency]/rates[from_currency]:.4f}** {to_currency}", False)
             ],
-            footer=f"Rates last updated: {self.last_update.strftime('%Y-%m-%d %H:%M UTC') if self.last_update else 'Unknown'}"
+            footer=f"⏰ Rates last updated: {self.last_update.strftime('%Y-%m-%d %H:%M UTC') if self.last_update else 'Unknown'}"
         )
         
         await interaction.followup.send(embed=embed)
