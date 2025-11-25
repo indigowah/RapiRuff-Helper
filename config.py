@@ -44,6 +44,18 @@ class Config:
     
     # JSON Stats file
     EMOJI_STATS_FILE: Path = DATA_DIR / "emoji_stats.json"
+    SPAM_STATS_FILE: Path = DATA_DIR / "spam_stats.json"
+
+    # Statistics Configuration
+    EMOJI_TRACKING_ENABLED: bool = os.getenv("EMOJI_TRACKING_ENABLED", "false").lower() == "true"
+    SPAM_DETECTION_ENABLED: bool = os.getenv("SPAM_DETECTION_ENABLED", "false").lower() == "true"
+    CALL_TRACKING_ENABLED: bool = os.getenv("CALL_TRACKING_ENABLED", "false").lower() == "true"
+
+    # Spam Thresholds
+    SPAM_CHAR_REPETITION_THRESHOLD: int = int(os.getenv("SPAM_CHAR_REPETITION_THRESHOLD", "4"))
+    SPAM_CAPS_RATIO_THRESHOLD: float = float(os.getenv("SPAM_CAPS_RATIO_THRESHOLD", "0.7"))
+    SPAM_REPEATED_MSG_COUNT: int = int(os.getenv("SPAM_REPEATED_MSG_COUNT", "3"))
+    SPAM_REPEATED_MSG_WINDOW: int = int(os.getenv("SPAM_REPEATED_MSG_WINDOW", "60"))  # seconds
     
     @classmethod
     def validate(cls) -> None:

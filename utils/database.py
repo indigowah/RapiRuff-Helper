@@ -80,8 +80,10 @@ class CallSession(BaseModel):
     
     session_id = IntegerField(primary_key=True)
     user = ForeignKeyField(User, backref="call_sessions", on_delete="CASCADE")
+    channel_id = BigIntegerField(help_text="Voice channel ID")
     join_ts = DateTimeField(help_text="Timestamp when user joined voice channel")
     leave_ts = DateTimeField(null=True, help_text="Timestamp when user left voice channel")
+    duration = IntegerField(null=True, help_text="Duration in seconds")
     
     class Meta:
         table_name = "call_sessions"
@@ -126,8 +128,45 @@ class AFKStatus(BaseModel):
         table_name = "afk_status"
 
 
+class GuildSettings(BaseModel):
+    """Per-guild configuration settings."""
+    
+    guild_id = BigIntegerField(primary_key=True)
+    emoji_tracking_enabled = BooleanField(default=False)
+    spam_detection_enabled = BooleanField(default=False)
+    call_tracking_enabled = BooleanField(default=False)
+    settings_json = CharField(max_length=5000, null=True, help_text="JSON storage for other settings")
+    
+    class Meta:
+        table_name = "guild_settings"
+
+
+class UserSettings(BaseModel):
+    """Per-user configuration settings."""
+    
+    user_id = BigIntegerField(primary_key=True)
+    opt_out = BooleanField(default=False, help_text="User opted out of tracking")
+    settings_json = CharField(max_length=5000, null=True, help_text="JSON storage for other settings")
+    
+    class Meta:
+        table_name = "user_settings"
+
+
+class SpamStats(BaseModel):
+    """Spam statistics tracking."""
+    
+    user = ForeignKeyField(User, backref="spam_stats", on_delete="CASCADE")
+    spam_type = CharField(max_length=50)
+    count = IntegerField(default=0)
+    last_triggered = DateTimeField(default=datetime.utcnow)
+    metadata = CharField(max_length=5000, null=True, help_text="JSON metadata")
+    
+    class Meta:
+        table_name = "spam_stats"
+
+
 # List of all models for easy reference
-MODELS = [User, Finance, CallSession, DueItem, GamePreference, AFKStatus]
+MODELS = [User, Finance, CallSession, DueItem, GamePreference, AFKStatus, GuildSettings, UserSettings, SpamStats]
 
 
 def initialize_database():
